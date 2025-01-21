@@ -49,15 +49,15 @@
 
     private void ResizeAndRehash(int newKey, string newValue)
     {
-        int newCapacity = _capacity * 2;
-        Entry[] newEntries = new Entry[newCapacity];
+        _capacity *= 2;
+        Entry[] newEntries = new Entry[_capacity];
 
         // Rehash existing entries
         foreach (var entry in _entries)
         {
             if (entry != null)
             {
-                int newIndex = GetIndex(entry.Key, newCapacity);
+                int newIndex = GetIndex(entry.Key, _capacity);
                 if (newEntries[newIndex] != null)
                 {
                     // Recursive resize if collision during rehash
@@ -69,7 +69,7 @@
         }
 
         // Try add new entry
-        int targetIndex = GetIndex(newKey, newCapacity);
+        int targetIndex = GetIndex(newKey, _capacity);
         if (newEntries[targetIndex] != null)
         {
             ResizeAndRehash(newKey, newValue);
@@ -80,7 +80,6 @@
 
         // Update state
         _entries = newEntries;
-        _capacity = newCapacity;
     }
 
     public string Get(int key)
